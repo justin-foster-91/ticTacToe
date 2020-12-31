@@ -1,8 +1,8 @@
 let sp = '_'
 let gameBoard = [
-  ["O","O","O"],
-  [sp,"X",sp],
-  ["X","X",sp]
+  [sp,sp,sp],
+  [sp,sp,sp],
+  [sp,sp,sp]
 ];
 let currentMove = 0;
 
@@ -91,8 +91,9 @@ function whoIsThreeInARow(list){
 function isGameOver(){
   let finished = false;
   let winner = '';
-
-  checkSetsOfThree.map(list => {
+ 
+  checkSetsOfThree.map(func => {
+    let list = func()
     if (whoIsThreeInARow(list).winnerX) {
       finished = true
       winner = 'Player One'
@@ -121,17 +122,38 @@ function display(){
   console.log(gameBoard[2])
 }
 
+function gameLoop(){
+  while (!isGameOver()){
+    // Print board
+    display();
+    // Get input from user
+    const prompt = require('prompt-sync')();
+    // Inputs as X, X
+    let playerMove = prompt('Where would you like to move?');
+    if (playerMove === 'break') break;
+    // Call PlayGame with above input
+    playerMove = playerMove.split(',').map(num => Number(num.trim()))
+    // [ X, X ]
+    playGame(playerMove[0], playerMove[1]);
+  }
+  display();
+  console.log(isGameOver());
+  
+}
+
+gameLoop();
+
 // console.log(playGame(0, 0));
 // console.log(playGame(2, 2));
 // console.log(playGame(2, 1));
-console.log("Current Move: ", currentMove);
+// console.log("Current Move: ", currentMove);
 // console.log(gameBoard);
-display();
-console.log(' ');
+// display();
+// console.log(' ');
 // console.log(() => checkSetsOfThree.getFirstRow);
 // console.log(whoIsThreeInARow(() => checkSetsOfThree.getFirstRow));
 
-console.log('First row: ', whoIsThreeInARow(getFirstRow()));
+// console.log('First row: ', whoIsThreeInARow(getFirstRow()));
 
 // console.log(isGameOver())
 
