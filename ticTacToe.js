@@ -1,4 +1,4 @@
-let sp = '_'
+let sp = ' '
 let gameBoard = [
   [sp,sp,sp],
   [sp,sp,sp],
@@ -121,7 +121,7 @@ function display(){
   console.log(gameBoard[1])
   console.log(gameBoard[2])
 }
-
+/*
 function gameLoop(){
   while (!isGameOver()){
     // Print board
@@ -142,6 +142,7 @@ function gameLoop(){
 }
 
 gameLoop();
+*/
 
 // console.log(playGame(0, 0));
 // console.log(playGame(2, 2));
