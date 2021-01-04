@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.50.0/dist/phaser.min.js"></script>
+</head>
+<body>
+  
+  <!--Is this the right way to import a js file?-->
+  <script type = "text/javascript" src="ticTacToe.js" >
+  </script>
+
+  
+
+  <canvas id="myCanvas" width="600" height="300" style="border:1px solid #000000;">
+  </canvas> 
+  <script>
+    
+
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var halfHeight = myCanvas.height / 2;
+    var halfWidth = myCanvas.width / 2;
+    ctx.translate(halfWidth, halfHeight);
+
+    // Tile dimensions, color, and line color
+    let tileSide = 90;
+    let halfTile = tileSide / 2;
+    let lineColor = 'black';
+    let tileColorCorners = 'blue';
+    let tileColorSpaces = 'green';
+    let tiles = [];
+
+    function drawBoard() {
+      for (let row=0; row<gameBoard.length; row++) {
+        for (let column=0; column<gameBoard[0].length; column++) {
+          let tileNumber = (row * 3) + column;
+          // console.log(tileNumber);
+          let gameTile = gameBoard[row][column]
+          
+          ctx.fillStyle = (tileNumber % 2 === 0) ? tileColorCorners : tileColorSpaces;
+          ctx.fillRect((-tileSide * 1.5) + (column * tileSide), (-tileSide * 1.5) + (row * tileSide), tileSide, tileSide); 
+              
+          ctx.fillStyle = 'black';
+          ctx.font = `${tileSide}px Arial`;
+          // ctx.fillText("X", -(tileSide / 3), (tileSide / 2.7)); 
+          ctx.fillText(gameTile, (-tileSide * 1.5) + (halfTile * .25) + (column * tileSide), (-tileSide * 1.5) + (tileSide * .86) + (row * tileSide)); 
+        
+          tiles.push({
+            number: tileNumber,
+            x: halfWidth + ((-tileSide * 1.5) + (column * tileSide)),
+            y: halfHeight + ((-tileSide * 1.5) + (row * tileSide)),
+            // FIXME:
+            row: row,
+            column: column,
+            // row: gameBoard[row],
+            // column: gameBoard[column],
+            color: (tileNumber % 2 === 0) ? tileColorCorners : tileColorSpaces,
+          })
+        }
+      }
+
+      // I need to loop through these instead of making them manually
+      // Vertical line 1
+      ctx.strokeStyle = lineColor;
+      ctx.moveTo(-halfTile, -tileSide * 1.5);
+      ctx.lineTo(-halfTile, tileSide * 1.5);
+      ctx.stroke(); 
+
+      // Vertical line 2
+      ctx.moveTo(halfTile, -tileSide * 1.5);
+      ctx.lineTo(halfTile, tileSide * 1.5);
+      ctx.stroke(); 
+
+      // Horizontal line 1
+      ctx.moveTo(-tileSide * 1.5, -halfTile);
+      ctx.lineTo(tileSide * 1.5, -halfTile);
+      ctx.stroke();
+
+      // Horizontal line 1
+      ctx.moveTo(-tileSide * 1.5, halfTile);
+      ctx.lineTo(tileSide * 1.5, halfTile);
+      ctx.stroke();
+    }
+    setInterval(drawBoard, 100)
+
+    // https://www.informit.com/articles/article.aspx?p=1903884&seqNum=6
+    function windowToCanvas(canvas, x, y) {
+      var bbox = canvas.getBoundingClientRect();
+      return { x: Math.round(x - bbox.left * (canvas.width  / bbox.width)),
+                y: Math.round(y - bbox.top  * (canvas.height / bbox.height))
+              };
+    }
+
+    myCanvas.onclick = function (e) {
+      var loc = windowToCanvas(myCanvas, e.clientX, e.clientY);
+      // console.log(loc);
+
+    };
+
+
+
+
+    // X move character
+    // ctx.fillStyle = 'black';
+    // ctx.font = `${tileSide}px Arial`;
+    // // This needs to be adaptable to different tiles.
+    // ctx.fillText("X", -(tileSide / 3), (tileSide / 2.7)); 
+
+    // O move character
+    // ctx.fillStyle = 'black';
+    // ctx.font = `${tileSide}px Arial`;
+    // ctx.fillText("O", -(tileSide / 2.6), (tileSide / 2.7)); 
+
+    function isIntersect(point, tile) {
+      // return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
+      // return point.x >= halfWidth - (tileSide * 1.5) && 
+      // point.x <= halfWidth + (tileSide * 1.5) &&
+      // point.y >= halfWidth - (tileSide * 1.5) &&
+      // point.y <= halfWidth + (tileSide * 1.5);
+      return point.x >= tile.x &&
+      point.x <= tile.x + tileSide &&
+      point.y >= tile.y &&
+      point.y <= tile.y + tileSide;
+    }
+
+    myCanvas.addEventListener('click', (e) => {
+      let pos = {
+        x: e.clientX,
+        y: e.clientY
+      };
+      pos = windowToCanvas(myCanvas, pos.x, pos.y)
+      // console.log("Click: ", pos);
+      tiles.forEach(tile => {
+        if (isIntersect(pos, tile)) {
+          console.log('click on tile: ' + tile.number);
+          gameBoard[tile.number] = playGame(tile.row, tile.column);
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>
