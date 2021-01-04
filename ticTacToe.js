@@ -5,6 +5,8 @@ let gameBoard = [
   [sp,sp,sp]
 ];
 let currentMove = 0;
+let playerOneWins = 0;
+let playerTwoWinds = 0;
 
 function move(row, column, movePiece){
   if (gameBoard[row][column] === sp){
@@ -22,10 +24,14 @@ function playerTwo(row, column){
 }
 
 function playGame(row, column){
-  if (currentMove % 2 === 0) {
-    playerOne(row, column)
+  if (isGameOver() === false) {
+    if (currentMove % 2 === 0) {
+      playerOne(row, column)
+    } else {
+      playerTwo(row, column)
+    }
   } else {
-    playerTwo(row, column)
+    return ((currentMove - 1) % 2 === 0) ? 'Player one' : 'Player two';
   }
 }
 
@@ -104,15 +110,7 @@ function isGameOver(){
     }
   })
   
-  // if (whoIsThreeInARow(getFirstRow())) finished = true;
-  // if (whoIsThreeInARow(getSecondRow())) finished = true;
-  // if (whoIsThreeInARow(getThirdRow())) finished = true;
-  // if (whoIsThreeInARow(getFirstColumn())) finished = true;
-  // if (whoIsThreeInARow(getSecondColumn())) finished = true;
-  // if (whoIsThreeInARow(getThirdColumn())) finished = true;
-  // if (whoIsThreeInARow(getFirstDiagonal())) finished = true;
-  // if (whoIsThreeInARow(getSecondDiagonal())) finished = true;
-  return finished ? `${winner} wins!` : false;
+  return finished ? winner : false;
 }
 
 function display(){

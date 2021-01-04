@@ -32,6 +32,7 @@
     let tileColorCorners = 'blue';
     let tileColorSpaces = 'green';
     let tiles = [];
+    let endText = '';
 
     function drawBoard() {
       for (let row=0; row<gameBoard.length; row++) {
@@ -83,6 +84,16 @@
       ctx.moveTo(-tileSide * 1.5, halfTile);
       ctx.lineTo(tileSide * 1.5, halfTile);
       ctx.stroke();
+
+      ctx.fillStyle = 'red';
+      // ctx.font = `${tileSide}px Arial`;
+      ctx.fillText(endText,-105,25,220)
+
+      // This being written over constantly makes the text look worse
+      // ctx.fillStyle = 'black';
+      // ctx.font = `${tileSide /5}px Arial`;
+      // ctx.fillText(`Player one wins: ${playerOneWins}`,-290,-50,200)
+      // ctx.fillText(`Player two wins: ${playerOneWins}`,-290,-20,200)
     }
     setInterval(drawBoard, 100)
 
@@ -96,30 +107,10 @@
 
     myCanvas.onclick = function (e) {
       var loc = windowToCanvas(myCanvas, e.clientX, e.clientY);
-      // console.log(loc);
-
+      console.log("Click loc: ", loc.x, loc.y);
     };
 
-
-
-
-    // X move character
-    // ctx.fillStyle = 'black';
-    // ctx.font = `${tileSide}px Arial`;
-    // // This needs to be adaptable to different tiles.
-    // ctx.fillText("X", -(tileSide / 3), (tileSide / 2.7)); 
-
-    // O move character
-    // ctx.fillStyle = 'black';
-    // ctx.font = `${tileSide}px Arial`;
-    // ctx.fillText("O", -(tileSide / 2.6), (tileSide / 2.7)); 
-
     function isIntersect(point, tile) {
-      // return Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius;
-      // return point.x >= halfWidth - (tileSide * 1.5) && 
-      // point.x <= halfWidth + (tileSide * 1.5) &&
-      // point.y >= halfWidth - (tileSide * 1.5) &&
-      // point.y <= halfWidth + (tileSide * 1.5);
       return point.x >= tile.x &&
       point.x <= tile.x + tileSide &&
       point.y >= tile.y &&
@@ -132,11 +123,15 @@
         y: e.clientY
       };
       pos = windowToCanvas(myCanvas, pos.x, pos.y)
-      // console.log("Click: ", pos);
+
       tiles.forEach(tile => {
         if (isIntersect(pos, tile)) {
-          console.log('click on tile: ' + tile.number);
-          gameBoard[tile.number] = playGame(tile.row, tile.column);
+          console.log('Clicked tile: ' + tile.number);
+          if (!playGame(tile.row, tile.column)) {
+            playGame(tile.row, tile.column)
+          } else {
+            endText = playGame() + ' wins!';
+          };
         }
       });
     });
