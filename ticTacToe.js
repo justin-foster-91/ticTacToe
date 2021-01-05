@@ -6,7 +6,7 @@ let gameBoard = [
 ];
 let currentMove = 0;
 let playerOneWins = 0;
-let playerTwoWinds = 0;
+let playerTwoWins = 0;
 
 function move(row, column, movePiece){
   if (gameBoard[row][column] === sp){
@@ -101,16 +101,28 @@ function isGameOver(){
   checkSetsOfThree.map(func => {
     let list = func()
     if (whoIsThreeInARow(list).winnerX) {
-      finished = true
-      winner = 'Player One'
+      finished = true;
+      winner = 'Player One';
+      playerOneWins++;
+      clearBoard();
     }
     if (whoIsThreeInARow(list).winnerO) {
-      finished = true
-      winner = 'Player Two'
+      finished = true;
+      winner = 'Player Two';
+      playerTwoWins++;
+      clearBoard();
     }
   })
   
   return finished ? winner : false;
+}
+
+function clearBoard(){
+  gameBoard = [
+    [sp,sp,sp],
+    [sp,sp,sp],
+    [sp,sp,sp]
+  ];
 }
 
 function display(){
@@ -119,6 +131,7 @@ function display(){
   console.log(gameBoard[1])
   console.log(gameBoard[2])
 }
+
 /*
 function gameLoop(){
   while (!isGameOver()){

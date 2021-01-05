@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script src="//cdn.jsdelivr.net/npm/phaser@3.50.0/dist/phaser.min.js"></script>
 </head>
 <body>
   
@@ -26,7 +25,7 @@
     ctx.translate(halfWidth, halfHeight);
 
     // Tile dimensions, color, and line color
-    let tileSide = 90;
+    let tileSide = 50;
     let halfTile = tileSide / 2;
     let lineColor = 'black';
     let tileColorCorners = 'blue';
@@ -53,7 +52,6 @@
             number: tileNumber,
             x: halfWidth + ((-tileSide * 1.5) + (column * tileSide)),
             y: halfHeight + ((-tileSide * 1.5) + (row * tileSide)),
-            // FIXME:
             row: row,
             column: column,
             // row: gameBoard[row],
@@ -105,7 +103,7 @@
               };
     }
 
-    myCanvas.onclick = function (e) {
+    myCanvas.onmousemove = function (e) {
       var loc = windowToCanvas(myCanvas, e.clientX, e.clientY);
       console.log("Click loc: ", loc.x, loc.y);
     };
