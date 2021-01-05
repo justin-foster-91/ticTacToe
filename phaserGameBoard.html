@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.50.0/dist/phaser.min.js"></script>
+
+</head>
+<body>
+  <script type = "text/javascript" src="ticTacToe.js" >
+  </script>
+
+<script>
+  var config = {
+    type: Phaser.WEBGL,
+    parent: 'phaser-example',
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+  };
+
+  var game = new Phaser.Game(config);
+
+  function preload ()
+  {
+    this.load.image('eye', 'assets/lance-overdose-loader-eye.png');
+  }
+
+  let tileSide = 150;
+  let sprites = [];
+  let playerOneWinsText = undefined;
+  let playerTwoWinsText = undefined;
+
+  function create ()
+  {
+    // ctx.fillRect((-tileSide * 1.5) + (column * tileSide), (-tileSide * 1.5) + (row * tileSide), tileSide, tileSide); 
+
+    for (let row=0; row<gameBoard.length; row++) {
+      for (let column=0; column<gameBoard[0].length; column++) {
+        let tileNumber = (row * 3) + column;
+        // console.log(tileNumber);
+        let gameTile = gameBoard[row][column]
+        
+        var sprite = this.add.sprite((column * tileSide) + 80, (row * tileSide) + 80, 'eye').setInteractive();
+        sprites.push(sprite)
+
+        sprite.on('pointerdown', function (pointer) {
+          playGame(row, column)
+        });
+      }
+    }
+    playerOneWinsText = this.add.text(470, 75, `Player one wins:   ${playerOneWins}`, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+    playerTwoWinsText = this.add.text(470, 125, `Player two wins:   ${playerTwoWins}`, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+  }
+
+  let colorArr = [
+    0xFF0000,
+    0x0000FF,
+    0x00FF00,
+    0xFFFF00,
+    0xFF00FF,
+    
+  ]
+  let rotationArr = [
+    0 * 3.14,
+    .5 * 3.14,
+    1* 3.14,
+    1.5 * 3.14
+  ]
+  let spriteRotation = 0;
+
+  function update() 
+  {
+    // sprites.map(sprite => sprite.setTint(colorArr[Math.floor(Math.random() * colorArr.length)]))
+    sprites.map(sprite => sprite.setRotation(spriteRotation))
+    // sprites.map(sprite => sprite.setRotation(rotationArr[Math.floor(Math.random() * rotationArr.length)]))
+    spriteRotation += .0025;
+    for (let row=0; row<gameBoard.length; row++) {
+      for (let column=0; column<gameBoard[0].length; column++) {
+        let tileNumber = (row * 3) + column;
+        // console.log(tileNumber);
+        let gameTile = gameBoard[row][column]
+        
+        if (gameTile === 'X') {
+          sprites[tileNumber].setTint(0xFF0000)
+        } else if (gameTile === 'O') {
+          sprites[tileNumber].setTint(0x0000FF)
+        } else {
+          sprites[tileNumber].clearTint()
+        }
+      }
+    }
+    playerOneWinsText.setText(`Player one (red) wins:   ${playerOneWins}`);
+    playerTwoWinsText.setText(`Player two (blue) wins:   ${playerTwoWins}`);
+
+    // if (sprite === ' ') this.clearTint()
+    // this.add.text(470, 50, `Player one wins:   ${playerOneWins}`, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+    // this.add.text(470, 100, `Player two wins:   ${playerTwoWins}`, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+
+  }
+</script>
+</body>
+</html>
